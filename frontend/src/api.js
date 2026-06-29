@@ -1,7 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "";
+const API_BASE_URL = "https://entarata-ass-6lvt.vercel.app";
 
 export async function explainCode(payload) {
-  const response = await fetch(`${API_BASE_URL}/api/explain`, {
+  const response = await fetch(`https://entarata-ass-6lvt.vercel.app/api/explain`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
