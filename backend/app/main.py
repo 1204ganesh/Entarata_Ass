@@ -10,7 +10,7 @@ from app.analyzer import analyze_code
 from app.llm import explain_locally, explain_with_provider
 from app.models import ExplainRequest, ExplainResponse
 
-load_dotenv(Path(__file__).resolve().parents[1] / ".env")
+os.getenv("FRONTEND_ORIGINS")
 
 app = FastAPI(title="AI Code Explainer API", version="1.0.0")
 
@@ -22,14 +22,26 @@ frontend_origins = [
     ).split(",")
     if origin.strip()
 ]
+# app.add_middleware(
+#     CORSMiddleware,
+#     allow_origins=frontend_origins,
+#     allow_credentials=True,
+#     allow_methods=["*"],
+#     allow_headers=["*"],
+# )
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=frontend_origins,
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
+@app.get("/debug/origins")
+async def debug_origins():
+    return {
+        "origins": frontend_origins
+    }
 
 @app.get("/api/health")
 async def health() -> dict[str, str]:
