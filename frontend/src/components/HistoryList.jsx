@@ -1,33 +1,4 @@
-// import { Clock3 } from "lucide-react";
 
-// export default function HistoryList({ items, activeId, onSelect }) {
-//   return (
-//     <div className="historyCard">
-//       <div className="panelTitle">
-//         <Clock3 size={18} />
-//         Snippets
-//       </div>
-//       {items.length === 0 ? (
-//         <p className="emptyState">Submitted snippets will appear here.</p>
-//       ) : (
-//         <div className="historyList">
-//           {items.map((item, index) => (
-//             <button
-//               className={`historyItem ${item.id === activeId ? "active" : ""}`}
-//               type="button"
-//               key={item.id}
-//               onClick={() => onSelect(item.id)}
-//             >
-//               <span>{item.language}</span>
-//               <strong>Snippet {items.length - index}</strong>
-//               <small>{new Date(item.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</small>
-//             </button>
-//           ))}
-//         </div>
-//       )}
-//     </div>
-//   );
-// }
 
 import { Clock } from "lucide-react";
 
