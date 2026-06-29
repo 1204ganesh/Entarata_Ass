@@ -16,10 +16,12 @@ app = FastAPI(title="AI Code Explainer API", version="1.0.0")
 
 frontend_origins = [
     origin.strip()
-    for origin in os.getenv("FRONTEND_ORIGINS", "https://entarata-ass.vercel.app/,http://127.0.0.1:5173").split(",")
+    for origin in os.getenv(
+        "FRONTEND_ORIGINS",
+        "http://localhost:5173,http://127.0.0.1:5173"
+    ).split(",")
     if origin.strip()
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=frontend_origins,
