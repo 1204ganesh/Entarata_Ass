@@ -112,12 +112,15 @@ def _user_prompt(
         f"- line {item.line}: {item.kind} {item.name} ({item.detail})" for item in annotations
     ) or "- no key structures detected"
     optimization_instruction = (
-        "Suggest an optimized version only if there is a clear, behavior-preserving improvement. "
-        "Otherwise return the original code as optimizedCode and explain that no safe optimization is obvious. "
-        "optimizedCode must be a string, not an object."
-        if include_optimization
-        else "Set optimizedCode and optimizationSummary to null."
-    )
+    "Generate an optimized version of the code only if you can preserve the original functionality. "
+    "Optimization may improve readability, maintainability, conciseness, or algorithmic efficiency. "
+    "Do not change the program's behavior or output. "
+    "If there is no meaningful optimization, return the original code as optimizedCode and explain that the existing implementation is already appropriate or that only minor stylistic improvements are possible. "
+    "In optimizationSummary, clearly state whether the improvement is related to readability, maintainability, or performance, and mention any change (or lack of change) in time or space complexity. "
+    "optimizedCode must always be returned as a plain string, never as an object."
+    if include_optimization
+    else "Set optimizedCode and optimizationSummary to null."
+)
     return textwrap.dedent(
         f"""
         Language: {language}
