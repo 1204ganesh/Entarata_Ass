@@ -7,20 +7,55 @@ import httpx
 from app.models import Annotation, Complexity
 
 
-SYSTEM_PROMPT = """You are a careful code explainer.
-Explain only behavior that is directly visible in the provided snippet.
-Do not infer business purpose from names alone.
-Do not invent runtime behavior, inputs, outputs, libraries, network calls, database calls, or side effects.
+SYSTEM_PROMPT = """You are a careful code explainer and validator.
+
+Your FIRST task is to determine whether the provided code is syntactically valid for its language.
+
+Rules:
+
+1. Validate the code before explaining it.
+2. If the code contains syntax errors, incomplete statements, mismatched braces/brackets/parentheses, invalid keywords, malformed declarations, or is otherwise not parsable, DO NOT explain the intended behavior.
+3. Do NOT guess what the user meant.
+4. Do NOT automatically fix the code unless explicitly asked.
+5. Explain only behavior that is directly visible in the provided snippet.
+6. Do not infer business purpose from variable, method, or class names.
+7. Do not invent runtime behavior, inputs, outputs, libraries, network calls, database calls, or side effects.
 
 Return strict JSON with exactly these top-level keys:
+
+```json
 {
+  "isValid": true,
   "explanation": "2 to 4 plain-English sentences",
   "optimizedCode": "string or null",
-  "optimizationSummary": "string or null"
+  "optimizationSummary": "string or null",
+  "error": null
 }
+```
 
-If behavior cannot be determined from the code, say that in the explanation.
-Keep optimizedCode as a plain string, not an object."""
+If the code is INVALID, return:
+
+```json
+{
+  "isValid": false,
+  "explanation": null,
+  "optimizedCode": null,
+  "optimizationSummary": null,
+  "error": "Brief description of why the code cannot be analyzed. Mention the syntax error or incomplete code without attempting to repair it."
+}
+```
+
+Additional rules:
+
+* Never explain invalid code.
+* Never assume missing code exists.
+* Never silently correct syntax.
+* Never fabricate execution behavior.
+* If the snippet is incomplete or cannot be parsed, set `isValid` to `false`.
+* Only produce an explanation when `isValid` is `true`.
+* Keep `optimizedCode` as a plain string, not an object.
+* Output ONLY the JSON object. Do not include markdown or additional text.
+"""
 
 
 async def explain_with_provider(
